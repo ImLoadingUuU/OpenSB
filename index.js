@@ -44,6 +44,7 @@ client.buttons = new Collection();
 client.players=  {}
 client.prefix = config.prefix;
 client.kazagumo = kazagumo
+client.isannoying = false;
 kazagumo.on('error', (_, error) => console.error(error));
 
 module.exports = client;

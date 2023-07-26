@@ -1,6 +1,6 @@
 const { EmbedBuilder, ApplicationCommandType } = require('discord.js');
 function cleanTitle(string,artist){
-return string.replace("(Offical Music Video)","").replace("(Offical Video)").replace(`${artist} - `,"").replace("(Offical 4K Remastered Video)","")
+return string.replace("(Offical Music Video)","").replace("(Offical Video)").replace(`${artist} - `,"").replace("(Offical 4K Remastered Video)","").replace("(Video)")
 }
 module.exports = {
   name: 'youtube',
