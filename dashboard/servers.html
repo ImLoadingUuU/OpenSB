@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html data-bs-theme="dark" lang="en">
+
+<head >
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>OpenSB</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/Source%20Sans%20Pro.css">
+    <link rel="stylesheet" href="assets/css/bs-theme-overrides.css">
+    <link rel="stylesheet" href="assets/css/Features-Cards-icons.css">
+    <script src="./djsPermParser.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"
+        integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <style>
+            .hidden {
+                display: none;
+            }
+            .bw {
+                filter: grayscale(100%);
+            }
+        </style>
+</head>
+
+<body>
+    <div class="bg-dark text-secondary px-4 py-5 text-center" style="height: 100vh;">
+        <div id="cacheLoader" class="py-5">
+            <h1 class="display-5 fw-bold text-white"><strong>建立緩衝區中...</strong></h1>
+            <div class="col-lg-6 mx-auto">
+                <p class="fs-5 mb-4">請稍候,正在建立機器人緩衝區</p>
+            </div>
+        </div>
+        <div id="serverList" class="hidden">
+            <div class="container">
+                <div class="mt-4"></div>
+                <div class="row">
+                    <div class="col-md-3 my-2">
+                        <div class="card p-3">
+                            <h5>選擇</h5>
+
+
+                            <div id="serverContainer" class="list-group text-start list-group-flush  scrollarea">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-9 my-2">
+
+                        <div class="row mb-5">
+                            <div class="col-md-8 col-xl-6 text-left" style="width: 100%">
+                                <div class="mx-auto">
+                                    <h2>你還沒選擇一個伺服器來管理呢！</h2>
+                                    <p class="w-lg-50">選擇要管理的伺服器</p>
+                                </div>
+                                <div id="displayContainer" class="text-start">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                           <h2>機器人設置</h2>
+                                           <div class="accordion" id="accordionExample">
+                                            <div class="accordion-item">
+                                              <h2 class="accordion-header">
+                                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                                  開始使用
+                                                </button>
+                                              </h2>
+                                              <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                                                <div class="accordion-body">
+                                                  如何使用OpenSB面板？
+                                                </div>
+                                              </div>
+                                            </div>
+                                            <div class="accordion-item">
+                                              <h2 class="accordion-header">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#onlineStreaming" aria-expanded="false" aria-controls="collapseTwo">
+                                                 線上串流設定
+                                                </button>
+                                              </h2>
+                                              <div id="onlineStreaming" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                                                <div class="accordion-body">
+                                                   <h2>串流</h2>
+                                                  
+                                                </div>
+                                              </div>
+                                            </div>
+                                            <div class="accordion-item">
+                                              <h2 class="accordion-header">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                                  Accordion Item #3
+                                                </button>
+                                              </h2>
+                                              <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                                                <div class="accordion-body">
+                                                  <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="
+https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js
+"></script>
+    <script>
+        if (Cookies.get("token") == undefined) {
+            alert("Not Login!")
+        }
+        //
+        (async () => {
+            let result = await fetch("./userServers")
+            let data = await result.json()
+            console.log(data)
+            $("#cacheLoader").addClass("hidden")
+            $("#serverList").removeClass("hidden")
+            data.forEach((value) => {
+                let perm = convertPerms(value.permissions)
+                if (perm["ADMINISTRATOR"]) {
+                    $("#serverContainer").append(`<a class="list-group-item list-group-item-action py-3 lh-tight" href="#" aria-current="false">
+                                <div class="d-flex justify-content-between align-items-center w-100"><strong class="mb-1">${value.name}</strong><small>已經新增機器人</small></div>
+                                <div class="col-10 mb-1 small"><span>權限可用</span></div>
+                            </a>`)
+                } else {
+                    $("#serverContainer").append(`<a class="list-group-item list-group-item-action py-3 lh-tight disabled" href="#" aria-current="false">
+                                <div class="d-flex justify-content-between align-items-center w-100"><strong class="mb-1">${value.name}</strong><small>已經新增機器人</small></div>
+                                <div class="col-10 mb-1 small"><span>權限可用</span></div>
+                            </a>`)
+                }
+            })
+            AOS.init();
+        })()
+
+    </script>
+</body>
+
+
+</html>
